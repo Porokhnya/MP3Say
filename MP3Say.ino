@@ -87,11 +87,11 @@ void sayNumber(const String& str)
       return;
    }
 
-   // тут уже идут составные числа, у нас максимум голосовых файлов - на тысячу, без склонений.
+   // тут уже идут составные числа, у нас максимум голосовых файлов - на тысячу.
    // просто втупую разбиваем на составные части
 
    uint16_t ones = num % 10;
-   uint16_t decades = num/10 % 10;
+   uint16_t tens = num/10 % 10;
    uint16_t hundreds = num/100 % 10;
    uint16_t thousands = num/1000 % 10;
 
@@ -101,8 +101,8 @@ void sayNumber(const String& str)
    Serial.print(F("hundreds: "));
    Serial.println(hundreds);
 
-   Serial.print(F("decades: "));
-   Serial.println(decades);
+   Serial.print(F("tens: "));
+   Serial.println(tens);
 
    Serial.print(F("ones: "));
    Serial.println(ones);
@@ -132,7 +132,7 @@ void sayNumber(const String& str)
           add = 1;
           
          playMelodyDelayed(1000 + add,currentRaiseDelay);
-         currentRaiseDelay += getMelodyDelay(1000);
+         currentRaiseDelay += getMelodyDelay(1000 + add);
 
       }
       else
@@ -156,25 +156,25 @@ void sayNumber(const String& str)
 
    // сотни произнесли, произносим десятки.
    // тут есть один нюанс: если число десятков и единиц меньше 21 - произносим его напрямую, иначе - составное.
-   int decAndOnes = decades*10 + ones;
+   int tensAndOnes = tens*10 + ones;
 
-   if(decAndOnes <= 20)
+   if(tensAndOnes <= 20)
    {
-      if(decAndOnes > 0) // ноль произносить не надо
+      if(tensAndOnes > 0) // ноль произносить не надо
       {
-        Serial.println(String(F("PLAY DECANDONES: ")) + decAndOnes);
-        playMelodyDelayed(decAndOnes,currentRaiseDelay);
-        currentRaiseDelay += getMelodyDelay(decAndOnes);
+        Serial.println(String(F("PLAY TENSANDONES: ")) + tensAndOnes);
+        playMelodyDelayed(tensAndOnes,currentRaiseDelay);
+        currentRaiseDelay += getMelodyDelay(tensAndOnes);
         
       }
    }
    else
    {   
-     if(decades > 0)
+     if(tens > 0)
      {
-        Serial.println(String(F("PLAY DECADES: ")) + decades*10);
-        playMelodyDelayed(decades*10,currentRaiseDelay);
-        currentRaiseDelay += getMelodyDelay(decades*10);
+        Serial.println(String(F("PLAY TENS: ")) + tens*10);
+        playMelodyDelayed(tens*10,currentRaiseDelay);
+        currentRaiseDelay += getMelodyDelay(tens*10);
         
      }
   
